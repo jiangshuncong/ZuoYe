@@ -23,7 +23,7 @@
             android:id="@+id/tv_title"
             android:textSize="18dp"
             android:text="标题"
-            android:textColor="#333333"
+            android:textColor="@color/textcolor"
             />
         <LinearLayout
             android:gravity="bottom"
@@ -35,14 +35,14 @@
                 android:id="@+id/tv_type"
                 android:layout_weight="1"
                 android:text="网站"
-                android:textColor="#999999"
+                android:textColor="@color/textcolor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_weight="1"
                 android:text="时间"
-                android:textColor="#999999"
+                android:textColor="@color/textcolor"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
         </LinearLayout>

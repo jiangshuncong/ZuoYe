@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="common_bg">#ffffff</color>
+    <color name="textcolor">#252525</color>
+    <color name="bg_kong">#F4F5F6</color>
+    <color name="xieyi">#3078AB</color>
+    <color name="shezhi">#fff</color>
+
 </resources>

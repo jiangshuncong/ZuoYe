@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="common_bg">#252525</color>
+    <color name="textcolor">#997F7F7F</color>
+    <color name="bg_kong">#1F1F1F</color>
+    <color name="xieyi">#fff</color>
+    <color name="shezhi">#373A43</color>
+
+
+</resources>

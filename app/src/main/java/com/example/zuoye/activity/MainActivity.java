@@ -2,6 +2,7 @@ package com.example.zuoye.activity;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ContentView(R.layout.activity_main)
-public class MainActivity extends SlidingFragmentActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private SlidingMenu menu;
 
     @ViewInject(R.id.iv_user)
@@ -69,12 +70,14 @@ public class MainActivity extends SlidingFragmentActivity implements View.OnClic
     //横划
     private void initMenu() {
         //添加做菜单
-        setBehindContentView(R.layout.left_layout);
+        //setBehindContentView(R.layout.left_layout);
+        menu = new SlidingMenu(this);
+        menu.setMenu(R.layout.left_layout);
         //替换左菜单
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_left,new LeftFragment()).commit();
 
         //设置相关属性
-        menu = getSlidingMenu();
+       // menu = getSlidingMenu();
         //设置左右菜单
         menu.setMode(SlidingMenu.LEFT_RIGHT);
         //设置边缘滑动
@@ -84,6 +87,7 @@ public class MainActivity extends SlidingFragmentActivity implements View.OnClic
         //设置右菜单
         menu.setSecondaryMenu(R.layout.right_layout);
         getSupportFragmentManager().beginTransaction().replace(R.id.fl_right,new RightFragment()).commit();
+        menu.attachToActivity(this,SlidingMenu.SLIDING_CONTENT);
 
     }
     @Override

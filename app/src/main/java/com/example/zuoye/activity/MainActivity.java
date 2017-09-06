@@ -10,6 +10,7 @@ import com.example.zuoye.R;
 import com.example.zuoye.fragment.LeftFragment;
 import com.example.zuoye.fragment.RightFragment;
 import com.example.zuoye.fragment.TopFragment;
+import com.example.zuoye.utils.NetWorkInfoUtils;
 import com.example.zuoye.view.HorizontalView;
 import com.kson.slidingmenu.SlidingMenu;
 import com.kson.slidingmenu.app.SlidingFragmentActivity;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         menu.attachToActivity(this,SlidingMenu.SLIDING_CONTENT);
 
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId())

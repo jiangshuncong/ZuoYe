@@ -13,4 +13,5 @@ public class HttpUrl {
     //mob
     public static final  String mKEY = "209efc5578217";
     public static final  String mSECRET = "1c637205c6178783d5d0c84fca106d38";
+
 }

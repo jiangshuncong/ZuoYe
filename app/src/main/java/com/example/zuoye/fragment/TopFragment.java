@@ -1,5 +1,7 @@
 package com.example.zuoye.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,7 @@ import com.example.zuoye.adapter.MyAdapter;
 import com.example.zuoye.R;
 import com.example.zuoye.api.HttpUrl;
 import com.example.zuoye.bean.News;
+import com.example.zuoye.utils.NetWorkInfoUtils;
 import com.google.gson.Gson;
 import com.kson.slidingmenu.SlidingMenu;
 
@@ -31,6 +34,7 @@ public class TopFragment extends Fragment implements XListView.IXListViewListene
 
     private SlidingMenu menu;
     private View view;
+    private SharedPreferences sp;
 
 
     @Nullable
@@ -44,11 +48,13 @@ public class TopFragment extends Fragment implements XListView.IXListViewListene
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-     lv_news=view.findViewById(R.id.xlv);
+        lv_news=view.findViewById(R.id.xlv);
         lv_news.setPullRefreshEnable(true);
         lv_news.setPullLoadEnable(true);
         lv_news.setXListViewListener(this);
 
+        initnet();
+        sp = getActivity().getSharedPreferences("msg", Context.MODE_PRIVATE);
         loadNews();
 
     }
@@ -107,4 +113,30 @@ public class TopFragment extends Fragment implements XListView.IXListViewListene
     public void onLoadMore() {
 
     }
+
+    //判断网络记录加载方式的方fa
+    private void initnet() {
+
+        //实例化对象
+        new NetWorkInfoUtils().getnet(getContext(), new NetWorkInfoUtils.NetWork() {
+            @Override
+            public void Wifivisible() {
+                //有WiFi网络加载大图
+                sp.edit().putBoolean("hasnet",true).commit();
+            }
+
+            @Override
+            public void Unnetvisible() {
+                //不加载图片
+                sp.edit().putBoolean("hasnet",false).commit();
+            }
+
+            @Override
+            public void NetMobilevisible() {
+                //手机数据网络自定义
+
+            }
+        });
+    }
+
 }

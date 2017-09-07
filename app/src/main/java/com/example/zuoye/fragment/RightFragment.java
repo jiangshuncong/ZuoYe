@@ -1,7 +1,9 @@
 package com.example.zuoye.fragment;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.zuoye.R;
 import com.example.zuoye.activity.OffLineActivity;
@@ -18,6 +21,7 @@ import com.example.zuoye.utils.NetWorkInfoUtils;
 public class RightFragment extends Fragment implements View.OnClickListener {
     public View view=null;
     private RelativeLayout net;
+    private SharedPreferences sp;
 
     @Nullable
     @Override
@@ -33,7 +37,8 @@ public class RightFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        initnet();
+        sp = getActivity().getSharedPreferences("msg", Context.MODE_PRIVATE);
+
         RelativeLayout lixian = view.findViewById(R.id.rl_lixian);
         net = view.findViewById(R.id.rl_net);
 
@@ -50,17 +55,22 @@ public class RightFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.rl_net:
-                new AlertDialog.Builder(getContext()).setSingleChoiceItems(new String[]{"大图", "无图"}, 0, new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(getContext()).setSingleChoiceItems(new String[]{"加载图片", "不加载图片"}, 0, new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         if (i == 0) {
 
                             //需要存储本地状态，选择的什么网络流量节省方式，"wifi"="hasnet"，加载大图
-
+                            sp.edit().putBoolean("hasnet",true).commit();
+                            boolean hasnet = sp.getBoolean("hasnet", false);
+                            Toast.makeText(getContext(),hasnet+"=================", Toast.LENGTH_SHORT).show();
 
                         } else if (i == 1) {
                             //需要存储本地状态，选择的什么网络流量节省方式，"wifi"="nonet"，不加载图
+                            sp.edit().putBoolean("hasnet",false).commit();
+
+                            boolean hasnet = sp.getBoolean("hasnet", false);
+                            Toast.makeText(getContext(),hasnet+"=================", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -73,28 +83,4 @@ public class RightFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
-    //判断网络记录加载方式的方fa
-    private void initnet() {
-
-        //实例化对象
-        new NetWorkInfoUtils().getnet(getContext(), new NetWorkInfoUtils.NetWork() {
-            @Override
-            public void Wifivisible() {
-                //有WiFi网络加载大图
-            }
-
-            @Override
-            public void Unnetvisible() {
-                //不加载图片
-
-            }
-
-            @Override
-            public void NetMobilevisible() {
-                //手机数据网络自定义
-
-            }
-        });
-    }
 }

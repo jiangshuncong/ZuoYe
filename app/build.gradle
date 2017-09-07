@@ -26,6 +26,13 @@ android {
             keyPassword "android"
         }
     }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
 }
 
 repositories {
@@ -49,4 +56,5 @@ dependencies {
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:26.+'
+    compile 'com.github.andyoom:draggrid:v1.0.1'
 }

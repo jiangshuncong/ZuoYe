@@ -47,8 +47,11 @@
 
     <com.example.zuoye.view.HorizontalView
        android:layout_width="match_parent"
-       android:layout_height="wrap_content"
+       android:layout_height="match_parent"
        android:id="@+id/horizontal_scolled"
-       ></com.example.zuoye.view.HorizontalView>
+        android:orientation="horizontal"
+       >
+    </com.example.zuoye.view.HorizontalView>
+
 
 </LinearLayout>

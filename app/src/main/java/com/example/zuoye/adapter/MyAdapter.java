@@ -1,5 +1,7 @@
 package com.example.zuoye.adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -23,6 +25,7 @@ public class MyAdapter extends BaseAdapter {
     private  final int a=0;
     private final int b=1;
     private final int total=2;
+    private SharedPreferences sp;
 
     public MyAdapter(MainActivity context, List<News.ResultBean.DataBean> list) {
         this.context=context;
@@ -64,6 +67,10 @@ public class MyAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+        sp = context.getSharedPreferences("msg", Context.MODE_PRIVATE);
+        //获取网络状态
+        boolean hasnet = sp.getBoolean("hasnet", true);
+
         ViewHolder1 v1=null;
         ViewHolder2 v2=null;
         int type = getItemViewType(i);
@@ -103,17 +110,23 @@ public class MyAdapter extends BaseAdapter {
 
         switch (type) {
             case a:
-v1.tv_date.setText(bean.getDate());
+                v1.tv_date.setText(bean.getDate());
                 v1.tv_title.setText(bean.getTitle());
                 v1.tv_type.setText(bean.getAuthor_name());
-                ImageLoader.getInstance().displayImage(bean.getThumbnail_pic_s(),v1.iv1);
+                //判断hasnet的值
+                if(hasnet == true){
+                    ImageLoader.getInstance().displayImage(bean.getThumbnail_pic_s(),v1.iv1);
+                }
 
                 break;
             case b:
                 v2.tv_date2.setText(bean.getDate());
                 v2.tv_title2.setText(bean.getTitle());
                 v2.tv_type2.setText(bean.getAuthor_name());
-                ImageLoader.getInstance().displayImage(bean.getThumbnail_pic_s(),v2.iv2);
+
+                if(hasnet == true){
+                    ImageLoader.getInstance().displayImage(bean.getThumbnail_pic_s(),v2.iv2);
+                }
                 break;
         }
 

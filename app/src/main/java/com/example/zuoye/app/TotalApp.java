@@ -13,6 +13,8 @@ import com.umeng.socialize.UMShareAPI;
 
 import org.xutils.x;
 
+import cn.jpush.android.api.JPushInterface;
+
 
 /**
  * Created by asus on 2017/8/30.
@@ -27,7 +29,13 @@ public class TotalApp extends Application {
         initImageLoader();
         initmob();
         initsan();
+        initservice();
 
+    }
+
+    private void initservice() {
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
     }
 
     private void initsan() {

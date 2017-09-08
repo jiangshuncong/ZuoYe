@@ -5,12 +5,15 @@ package com.example.zuoye.activity;
         import android.support.v4.app.Fragment;
         import android.os.Bundle;
         import android.support.v7.app.AppCompatActivity;
+        import android.text.TextUtils;
         import android.view.View;
         import android.widget.ImageView;
+        import android.widget.Toast;
 
         import com.andy.library.ChannelActivity;
         import com.andy.library.ChannelBean;
         import com.example.zuoye.R;
+        import com.example.zuoye.bean.PindaoJson;
         import com.example.zuoye.fragment.LeftFragment;
         import com.example.zuoye.fragment.RightFragment;
         import com.example.zuoye.fragment.TopFragment;
@@ -21,6 +24,7 @@ package com.example.zuoye.activity;
         import com.kson.slidingmenu.SlidingMenu;
         import com.kson.slidingmenu.app.SlidingFragmentActivity;
 
+        import org.json.JSONObject;
         import org.xutils.view.annotation.ContentView;
         import org.xutils.view.annotation.ViewInject;
         import org.xutils.x;
@@ -43,35 +47,53 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<ChannelBean> beanList = new ArrayList<>();
     String[] typeAll={"头条","社会","国内","国际","娱乐","体育","军事","科技","财经","时尚"};
     String[] typeId={"top","shehui","guonei","guoji","yule","tiyu","junshi","keji","caijing","shishang"};
-    String[] typeAll2;
-    String[] typeId2;
+    private SharedPreferences sp;
+    private List<ChannelBean> list2;
+    String[] typeAll2 = new String[50];
+    String[] typeId2 = new String[50];
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_main);
         x.view().inject(MainActivity.this);
-
-        SharedPreferences sp = getSharedPreferences("msg", MODE_PRIVATE);
+        //创建 sp
+        sp = getSharedPreferences("msg", MODE_PRIVATE);
+        //hasnet判断网络状态
         sp.edit().putBoolean("hasnet",true).commit();
+        //加载控件
         initview();
-
+        //加载菜单栏
         initMenu();
+        //点击事件
         pressListenter();
-        initData();
+        //加载新闻数据
+        boolean addlog = sp.getBoolean("addlog", true);
+        if(addlog){
+            initData();
+        }else{
+            String addmsg = sp.getString("addmsg", null);
+            List<ChannelBean> list4 = PindaoJson(addmsg);
+            inittwohor(list4);
+        }
     }
 
+    //加载控件
     private void initview() {
+        //横划菜单栏的＋号
         add = (ImageView) findViewById(R.id.iv_add);
     }
 
     private void initData() {
+        //创建一个集合用来存储类型名称
         List<String> types=new ArrayList<>();
-            //,top(头条，默认),shehui(社会),guonei(国内),guoji(国际),yule(娱乐),tiyu(体育)junshi(军事),keji(科技),caijing(财经),shishang(时尚)
+        //循环存入所有数据
             for (int i = 0; i < typeAll.length; i++) {
                 types.add(typeAll[i]);
             }
+            //创建Fragment类型集合
             List<Fragment> fragments=new ArrayList<>();
-
+            //for循环对应
             for (int i = 0; i <typeId.length ; i++) {
                 TopFragment top=new TopFragment();
                 Bundle bundle=new Bundle();
@@ -123,18 +145,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 menu.showSecondaryMenu(true);
                 break;
             case R.id.iv_add:
-                for (int i = 0; i < typeAll.length; i++) {
-                    ChannelBean bean;
-                    if(beanList.size() == 0){
-                    if(i<8){
-                        bean = new ChannelBean(typeAll[i], true);
-                    }else{
-                        bean = new ChannelBean(typeAll[i], false);
+                boolean addlog = sp.getBoolean("addlog", true);
+                if(!addlog){
+                        String addmsg = sp.getString("addmsg", null);
+                        list2 = PindaoJson(addmsg);
+
+                    ChannelActivity.startChannelActivity(this,list2);
+
+                }else{
+                    if(beanList.size() == 0) {
+                        for (int i = 0; i < typeAll.length; i++) {
+                            ChannelBean bean;
+                            if (i < typeAll.length) {
+                                bean = new ChannelBean(typeAll[i], true);
+                            } else {
+                                bean = new ChannelBean(typeAll[i], false);
+                            }
+                            beanList.add(bean);
+                        }
                     }
-                    beanList.add(bean);
-                    }
+                    ChannelActivity.startChannelActivity(this,beanList);
                 }
-                ChannelActivity.startChannelActivity(this,beanList);
                 break;
         }
 
@@ -144,26 +175,56 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        sp.edit().putBoolean("addlog",false).commit();
         String json = data.getStringExtra("json");
+        sp.edit().putString("addmsg",json).commit();
+        System.out.println("============json--"+json);
+        list2 = PindaoJson(json);
 
-        List<ChannelBean> list2 = PindaoJson(json);
+        //加载横条
+        inittwohor(list2);
+
+    }
+
+    private void inittwohor(List<ChannelBean> list3) {
+        //第二次横条加载
         int num = 0;
-        for (int i = 0; i < typeAll.length; i++) {
-            if(list2.get(i).isSelect() == true){
-                String name = list2.get(i).getName();
-                typeAll2[num] =  name;
-                typeId2[num] = typeId[i];
-                num ++;
+        for (int i = 0; i < list3.size(); i++) {
+            if(list3.get(i).isSelect() &&  !TextUtils.isEmpty(list3.get(i).getName())){
+                typeAll2[num] = list3.get(i).getName();
             }
+            num++;
+        }
+
+        int num2 = 0;
+        for (int i = 0; i < typeAll.length; i++) {
+            for (int j = 0; j < typeAll2.length; j++) {
+                String name = typeAll[i];
+                if(name.equals(typeAll2[j]) && !TextUtils.isEmpty(typeId[i])){
+                    typeId2[num2] = typeId[i];
+                }
+            }
+            num2 ++;
+        }
+
+
+        for (int i = 0; i < typeAll2.length; i++) {
+            System.out.println("--------typeAll2----"+typeAll2[i]);
+        }
+
+
+        for (int i = 0; i < typeId2.length; i++) {
+            System.out.println("--------typeId2----"+typeId2[i]);
         }
 
         List<String> types=new ArrayList<>();
-        //,top(头条，默认),shehui(社会),guonei(国内),guoji(国际),yule(娱乐),tiyu(体育)junshi(军事),keji(科技),caijing(财经),shishang(时尚)
+        //循环存入所有数据
         for (int i = 0; i < typeAll2.length; i++) {
             types.add(typeAll2[i]);
         }
+        //创建Fragment类型集合
         List<Fragment> fragments=new ArrayList<>();
-
+        //for循环对应
         for (int i = 0; i <typeId2.length ; i++) {
             TopFragment top=new TopFragment();
             Bundle bundle=new Bundle();
@@ -171,9 +232,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             top.setArguments(bundle);
             fragments.add(top);
         }
-
         horizontalView.getContent(types,fragments);
-
     }
 
     private List<ChannelBean> PindaoJson(String json) {
@@ -182,28 +241,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         List<ChannelBean>  list2 = gson.fromJson(json,new TypeToken<List<ChannelBean>>(){}
                 .getType());
 
+        System.out.println("============list2--"+list2.toString());
+        for (int i = 0; i < list2.size(); i++) {
+            System.out.println(list2.get(i).getName());
+        }
         return list2;
     }
-
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-
-        List<String> types=new ArrayList<>();
-        //,top(头条，默认),shehui(社会),guonei(国内),guoji(国际),yule(娱乐),tiyu(体育)junshi(军事),keji(科技),caijing(财经),shishang(时尚)
-        for (int i = 0; i < typeAll2.length; i++) {
-            types.add(typeAll2[i]);
-        }
-        List<Fragment> fragments=new ArrayList<>();
-
-        for (int i = 0; i <typeId2.length ; i++) {
-            TopFragment top=new TopFragment();
-            Bundle bundle=new Bundle();
-            bundle.putString("type",typeId2[i]);
-            top.setArguments(bundle);
-            fragments.add(top);
-        }
-
-        horizontalView.getContent(types,fragments);
-    }*/
 }

@@ -7,6 +7,40 @@ import java.util.List;
  */
 
 public class PindaoJson {
+    private String name;
+    private boolean isSelect;
 
+    @Override
+    public String toString() {
+        return "PindaoJson{" +
+                "name='" + name + '\'' +
+                ", isSelect=" + isSelect +
+                '}';
+    }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
+
+    public PindaoJson() {
+
+    }
+
+    public PindaoJson(String name, boolean isSelect) {
+
+        this.name = name;
+        this.isSelect = isSelect;
+    }
 }

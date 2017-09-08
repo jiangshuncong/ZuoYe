@@ -63,6 +63,7 @@ public class HorizontalView extends LinearLayout implements ViewPager.OnPageChan
     }
 //获得内容方法
     public void getContent(List<String> types, List<Fragment> framents){
+        ll_content.removeAllViews();
         this.types=types;
         this.fragments=framents;
         draw();
@@ -76,28 +77,30 @@ public class HorizontalView extends LinearLayout implements ViewPager.OnPageChan
     }
 
     private void drawTextView() {
+
         for (int i = 0; i <types.size() ; i++) {
-            final TextView tv=(TextView) View.inflate(context,R.layout.text_type,null);
+            if(types.get(i)!=null) {
+                final TextView tv = (TextView) View.inflate(context, R.layout.text_type, null);
 
 
-
-            tv.setText(types.get(i));
-            if(i==0) {
-                tv.setSelected(true);
-            }
-            final int finalI = i;
-            tv.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-//                    tv.setSelected(true);
-                    vp.setCurrentItem(finalI);
+                tv.setText(types.get(i));
+                if (i == 0) {
+                    tv.setSelected(true);
                 }
-            });
+                final int finalI = i;
+                tv.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+//                    tv.setSelected(true);
+                        vp.setCurrentItem(finalI);
+                    }
+                });
 
-            //添加到线性布局
-            LayoutParams params=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(10,0,10,0);
-            ll_content.addView(tv,params);
+                //添加到线性布局
+                LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMargins(10, 0, 10, 0);
+                ll_content.addView(tv, params);
+            }
         }
 
     }

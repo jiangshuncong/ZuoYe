@@ -59,11 +59,9 @@ public class HorizontalView extends LinearLayout implements ViewPager.OnPageChan
        vp = view.findViewById(R.id.vp_type);
         vp.addOnPageChangeListener(this);
 
-
     }
 //获得内容方法
     public void getContent(List<String> types, List<Fragment> framents){
-        ll_content.removeAllViews();
         this.types=types;
         this.fragments=framents;
         draw();
@@ -77,6 +75,9 @@ public class HorizontalView extends LinearLayout implements ViewPager.OnPageChan
     }
 
     private void drawTextView() {
+        if(ll_content.getChildCount()>0){
+            ll_content.removeAllViews();
+        }
 
         for (int i = 0; i <types.size() ; i++) {
             if(types.get(i)!=null) {
@@ -128,6 +129,7 @@ public class HorizontalView extends LinearLayout implements ViewPager.OnPageChan
     public void onPageScrollStateChanged(int state) {
 
     }
+
 
     class MyAdapter extends FragmentPagerAdapter{
 

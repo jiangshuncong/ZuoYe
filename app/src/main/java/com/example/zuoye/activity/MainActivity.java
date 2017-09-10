@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String[] typeId={"top","shehui","guonei","guoji","yule","tiyu","junshi","keji","caijing","shishang"};
     private SharedPreferences sp;
     private List<ChannelBean> list2;
-    String[] typeAll2 = new String[50];
-    String[] typeId2 = new String[50];
+    private List<String> typeAll2;
+    private List<String> typeId2;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -187,48 +187,60 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void inittwohor(List<ChannelBean> list3) {
+        typeAll2 = new ArrayList<>();
+        typeId2 = new ArrayList<>();
         //第二次横条加载
-        int num = 0;
         for (int i = 0; i < list3.size(); i++) {
             if(list3.get(i).isSelect() &&  !TextUtils.isEmpty(list3.get(i).getName())){
-                typeAll2[num] = list3.get(i).getName();
+                //typeAll2[num] = list3.get(i).getName();
+                typeAll2.add(list3.get(i).getName());
             }
-            num++;
         }
 
-        int num2 = 0;
-        for (int i = 0; i < typeAll.length; i++) {
-            for (int j = 0; j < typeAll2.length; j++) {
+        /*for (int i = 0; i < typeAll.length; i++) {
+            for (int j = 0; j < typeAll2.size(); j++) {
                 String name = typeAll[i];
-                if(name.equals(typeAll2[j]) && !TextUtils.isEmpty(typeId[i])){
-                    typeId2[num2] = typeId[i];
+                if(name.equals(typeAll2.get(j)) && !TextUtils.isEmpty(typeId[i])){
+                    //typeId2[num2] = typeId[i];
+                    typeId2.add(typeId[i]);
                 }
             }
-            num2 ++;
+        }*/
+
+        for (int i = 0; i < typeAll2.size(); i++) {
+            for (int j = 0; j < typeAll.length; j++) {
+                String name = typeAll[j];
+                if(name.equals(typeAll2.get(i)) && !TextUtils.isEmpty(typeId[j])){
+                    //typeId2[num2] = typeId[i];
+                    typeId2.add(typeId[j]);
+                }
+            }
         }
 
 
-        for (int i = 0; i < typeAll2.length; i++) {
-            System.out.println("--------typeAll2----"+typeAll2[i]);
+       /* for (int i = 0; i < typeAll2.size(); i++) {
+            System.out.println("--------typeAll2----"+typeAll2.get(i));
+            System.out.println("--------typeAll2.length----"+typeAll2.size());
+
         }
 
 
-        for (int i = 0; i < typeId2.length; i++) {
-            System.out.println("--------typeId2----"+typeId2[i]);
-        }
+        for (int i = 0; i < typeId2.size(); i++) {
+            System.out.println("--------typeId2----"+typeId2.get(i));
+        }*/
 
         List<String> types=new ArrayList<>();
         //循环存入所有数据
-        for (int i = 0; i < typeAll2.length; i++) {
-            types.add(typeAll2[i]);
+        for (int i = 0; i < typeAll2.size(); i++) {
+            types.add(typeAll2.get(i));
         }
         //创建Fragment类型集合
         List<Fragment> fragments=new ArrayList<>();
         //for循环对应
-        for (int i = 0; i <typeId2.length ; i++) {
+        for (int i = 0; i <typeId2.size() ; i++) {
             TopFragment top=new TopFragment();
             Bundle bundle=new Bundle();
-            bundle.putString("type",typeId2[i]);
+            bundle.putString("type",typeId2.get(i));
             top.setArguments(bundle);
             fragments.add(top);
         }

@@ -11,9 +11,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.city_picker.CityListActivity;
 import com.example.zuoye.R;
 import com.example.zuoye.activity.OffLineActivity;
 import com.example.zuoye.utils.NetWorkInfoUtils;
@@ -22,6 +24,7 @@ public class RightFragment extends Fragment implements View.OnClickListener {
     public View view=null;
     private RelativeLayout net;
     private SharedPreferences sp;
+    private LinearLayout city;
 
     @Nullable
     @Override
@@ -41,9 +44,11 @@ public class RightFragment extends Fragment implements View.OnClickListener {
 
         RelativeLayout lixian = view.findViewById(R.id.rl_lixian);
         net = view.findViewById(R.id.rl_net);
+        city = view.findViewById(R.id.ll_city);
 
         lixian.setOnClickListener(this);
         net.setOnClickListener(this);
+        city.setOnClickListener(this);
 
     }
 
@@ -77,6 +82,10 @@ public class RightFragment extends Fragment implements View.OnClickListener {
                         dialogInterface.dismiss();
                     }
                 }).show();
+                break;
+
+            case R.id.ll_city:
+                    startActivity(new Intent(getActivity(),CityListActivity.class));
                 break;
 
         }

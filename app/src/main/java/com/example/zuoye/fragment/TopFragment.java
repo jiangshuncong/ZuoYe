@@ -1,6 +1,7 @@
 package com.example.zuoye.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.example.zuoye.activity.MainActivity;
+import com.example.zuoye.activity.MsgActivity;
 import com.example.zuoye.adapter.MyAdapter;
 import com.example.zuoye.R;
 import com.example.zuoye.api.HttpUrl;
@@ -22,6 +25,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import view.xlistview.XListView;
@@ -35,6 +39,9 @@ public class TopFragment extends Fragment implements XListView.IXListViewListene
     private SlidingMenu menu;
     private View view;
     private SharedPreferences sp;
+    private List<String> list = new ArrayList<>();
+    private List<News.ResultBean.DataBean> data1;
+    private MyAdapter adapter;
 
 
     @Nullable
@@ -56,6 +63,17 @@ public class TopFragment extends Fragment implements XListView.IXListViewListene
         initnet();
         sp = getActivity().getSharedPreferences("msg", Context.MODE_PRIVATE);
         loadNews();
+
+        lv_news.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Intent intent = new Intent(getActivity(), MsgActivity.class);
+                intent.putExtra("url",list.get(i-1));
+                startActivity(intent);
+
+            }
+        });
 
     }
 
@@ -99,19 +117,30 @@ public class TopFragment extends Fragment implements XListView.IXListViewListene
     private void pareseData(String data) {
         Gson gson=new Gson();
         News news = gson.fromJson(data, News.class);
-        List<News.ResultBean.DataBean> data1 = news.getResult().getData();
-        MyAdapter adapter=new MyAdapter((MainActivity) getActivity(),data1);
+        data1 = news.getResult().getData();
+
+        for (News.ResultBean.DataBean data2: data1
+             ) {
+            String url = data2.getUrl();
+            list.add(url);
+        }
+
+        adapter = new MyAdapter((MainActivity) getActivity(), data1);
         lv_news.setAdapter(adapter);
     }
 
     @Override
     public void onRefresh() {
-
+        list.clear();
+        adapter = null;
+        loadNews();
+        lv_news.stopRefresh();
     }
 
     @Override
     public void onLoadMore() {
-
+        loadNews();
+        lv_news.stopLoadMore();
     }
 
     //判断网络记录加载方式的方fa

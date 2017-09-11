@@ -62,7 +62,6 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        //((MainActivity)getActivity()).getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
         int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         if(currentNightMode==Configuration.UI_MODE_NIGHT_YES){
